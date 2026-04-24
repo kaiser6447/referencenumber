@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>番号検索</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+      margin-top: 50px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>名前を入力</h2>
+
+<input type="text" id="nameInput" placeholder="名前を入力">
+<button onclick="search()">検索</button>
+
+<div id="result"></div>
+
+<script>
+let data = [];
+
+fetch('当日シフト.csv')
+  .then(response => response.text())
+  .then(text => {
+    const rows = text.split("\n").slice(1);
+    data = rows.map(row => {
+      const cols = row.split(",");
+      return {
+        number: cols[0],
+        name: cols[1]
+      };
+    });
+  });
+
+function search() {
+  const input = document.getElementById("nameInput").value.trim();
+  const result = data.find(d => d.name === input);
+
+  if (result) {
+    document.getElementById("result").innerText = "番号: " + result.number;
+  } else {
+    document.getElementById("result").innerText = "見つかりません";
+  }
+}
+</script>
+
+</body>
+</html>
